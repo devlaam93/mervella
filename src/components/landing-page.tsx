@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { Package, ArrowRight, BarChart3, Users, Shield, Zap, Search, ChevronRight, CheckCircle2, Lock, Eye, Database, Server } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LandingDemoDashboard } from '@/components/landing-demo-dashboard';
+import { PublicLayout } from '@/components/public-layout';
 
 const features = [
   {
@@ -76,19 +77,7 @@ const dotGridBg = {
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-landing-bg" style={{ fontFamily: font }}>
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-landing-grid bg-landing-bg/90 backdrop-blur-sm">
-        <div className="mx-auto flex h-12 max-w-[1200px] items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2">
-            <Package className="h-5 w-5 text-landing-dark" />
-            <span className="text-[15px] font-medium text-landing-dark tracking-tight">AssetWise</span>
-          </div>
-          <Link to="/" hash="login" className="text-[14px] text-landing-dark/50 hover:text-landing-dark transition-colors">
-            Sign in <ArrowRight className="inline h-3.5 w-3.5 ml-0.5" />
-          </Link>
-        </div>
-      </header>
+    <PublicLayout>
 
       {/* Hero */}
       <section className="relative overflow-hidden" style={dotGridBg}>
@@ -227,16 +216,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-landing-grid py-6 sm:py-8 bg-landing-bg">
-        <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Package className="h-4 w-4 text-landing-dark" />
-            <span className="text-[15px] text-landing-light-muted">AssetWise</span>
-          </div>
-          <p className="text-xs text-landing-light-muted/60">© {new Date().getFullYear()} All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
+    </PublicLayout>
   );
 }
