@@ -4,6 +4,8 @@ import ReactMarkdown from 'react-markdown';
 import { useAuth } from '@/lib/use-auth';
 import { AppLayout } from '@/components/app-layout';
 import { LoginPage } from '@/components/login-page';
+import { UpgradePrompt } from '@/components/upgrade-prompt';
+import { useSubscription } from '@/hooks/useSubscription';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -99,10 +101,19 @@ async function streamChat({
 
 function AiChatPage() {
   const { user, session } = useAuth();
+  const { isActive, loading: subLoading } = useSubscription();
   if (!user) return <LoginPage />;
   return (
     <AppLayout>
-      <ChatInterface token={session?.access_token ?? ''} />
+      {subLoading ? (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      ) : !isActive ? (
+        <UpgradePrompt feature="AI Chat" />
+      ) : (
+        <ChatInterface token={session?.access_token ?? ''} />
+      )}
     </AppLayout>
   );
 }
