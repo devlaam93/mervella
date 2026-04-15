@@ -1,5 +1,6 @@
 import { Link, useLocation } from '@tanstack/react-router';
 import { useAuth } from '@/lib/use-auth';
+import { useSubscription } from '@/hooks/useSubscription';
 import {
   LayoutDashboard,
   Package,
@@ -9,6 +10,7 @@ import {
   Menu,
   X,
   MessageSquare,
+  Lock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -18,12 +20,13 @@ const navItems = [
   { label: 'Dashboard', to: '/', icon: LayoutDashboard },
   { label: 'Assets', to: '/assets', icon: Package },
   { label: 'Employees', to: '/employees', icon: Users },
-  { label: 'AI Chat', to: '/ai-chat', icon: MessageSquare },
+  { label: 'AI Chat', to: '/ai-chat', icon: MessageSquare, premium: true },
   { label: 'Settings', to: '/settings', icon: Settings },
 ];
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { signOut, user } = useAuth();
+  const { isActive: hasSubscription } = useSubscription();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -82,6 +85,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               >
                 <item.icon className="h-4 w-4" />
                 {item.label}
+                {item.premium && !hasSubscription && (
+                  <Lock className="h-3 w-3 ml-auto text-muted-foreground" />
+                )}
               </Link>
             );
           })}
