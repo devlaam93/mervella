@@ -26,6 +26,7 @@ const navItems = [
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { signOut, user } = useAuth();
+  const { isActive: hasSubscription } = useSubscription();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -84,6 +85,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               >
                 <item.icon className="h-4 w-4" />
                 {item.label}
+                {item.premium && !hasSubscription && (
+                  <Lock className="h-3 w-3 ml-auto text-muted-foreground" />
+                )}
               </Link>
             );
           })}
