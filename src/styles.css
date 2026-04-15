@@ -165,3 +165,49 @@
     font-family: 'Onest', system-ui, sans-serif;
   }
 }
+
+/* Prose styles for legal/blog pages */
+.prose-landing {
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--landing-dark);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--landing-dark);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: 15px;
+    color: var(--landing-light-muted);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+  ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  li {
+    font-size: 15px;
+    color: var(--landing-light-muted);
+    line-height: 1.7;
+    margin-bottom: 0.25rem;
+  }
+  strong {
+    color: var(--landing-dark);
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--landing-dark);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+}
