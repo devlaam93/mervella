@@ -25,6 +25,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AssetsIndexRouteImport } from './routes/assets.index'
+import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AssetsNewRouteImport } from './routes/assets.new'
 import { Route as AssetsAssetIdRouteImport } from './routes/assets.$assetId'
@@ -110,6 +111,11 @@ const AssetsIndexRoute = AssetsIndexRouteImport.update({
   path: '/assets/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
+  id: '/checkout/return',
+  path: '/checkout/return',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/assets/$assetId': typeof AssetsAssetIdRouteWithChildren
   '/assets/new': typeof AssetsNewRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/assets/': typeof AssetsIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/assets/$assetId/edit': typeof AssetsAssetIdEditRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/assets/$assetId': typeof AssetsAssetIdRouteWithChildren
   '/assets/new': typeof AssetsNewRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/assets': typeof AssetsIndexRoute
   '/blog': typeof BlogIndexRoute
   '/assets/$assetId/edit': typeof AssetsAssetIdEditRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/assets/$assetId': typeof AssetsAssetIdRouteWithChildren
   '/assets/new': typeof AssetsNewRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/assets/': typeof AssetsIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/assets/$assetId/edit': typeof AssetsAssetIdEditRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/assets/$assetId'
     | '/assets/new'
     | '/blog/$slug'
+    | '/checkout/return'
     | '/assets/'
     | '/blog/'
     | '/assets/$assetId/edit'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/assets/$assetId'
     | '/assets/new'
     | '/blog/$slug'
+    | '/checkout/return'
     | '/assets'
     | '/blog'
     | '/assets/$assetId/edit'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/assets/$assetId'
     | '/assets/new'
     | '/blog/$slug'
+    | '/checkout/return'
     | '/assets/'
     | '/blog/'
     | '/assets/$assetId/edit'
@@ -285,6 +297,7 @@ export interface RootRouteChildren {
   AssetsAssetIdRoute: typeof AssetsAssetIdRouteWithChildren
   AssetsNewRoute: typeof AssetsNewRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  CheckoutReturnRoute: typeof CheckoutReturnRoute
   AssetsIndexRoute: typeof AssetsIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
@@ -403,6 +416,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout/return': {
+      id: '/checkout/return'
+      path: '/checkout/return'
+      fullPath: '/checkout/return'
+      preLoaderRoute: typeof CheckoutReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -464,6 +484,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssetsAssetIdRoute: AssetsAssetIdRouteWithChildren,
   AssetsNewRoute: AssetsNewRoute,
   BlogSlugRoute: BlogSlugRoute,
+  CheckoutReturnRoute: CheckoutReturnRoute,
   AssetsIndexRoute: AssetsIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
