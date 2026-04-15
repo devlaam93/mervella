@@ -1,8 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { PublicLayout } from '@/components/public-layout';
 import { Button } from '@/components/ui/button';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight, X } from 'lucide-react';
 import { useState } from 'react';
+import { useStripeCheckout } from '@/hooks/useStripeCheckout';
+import { useAuth } from '@/lib/use-auth';
+import { PaymentTestModeBanner } from '@/components/PaymentTestModeBanner';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 export const Route = createFileRoute('/pricing')({
   head: () => ({
@@ -22,6 +26,8 @@ const plans = [
     description: 'For small teams getting started',
     priceMonthly: 0,
     priceYearly: 0,
+    priceIdMonthly: null,
+    priceIdYearly: null,
     features: ['Up to 50 assets', '3 team members', 'Basic depreciation tracking', 'CSV import/export', 'Email support'],
     cta: 'Get started free',
     popular: false,
@@ -31,6 +37,8 @@ const plans = [
     description: 'For growing teams that need more',
     priceMonthly: 29,
     priceYearly: 290,
+    priceIdMonthly: 'professional_monthly',
+    priceIdYearly: 'professional_yearly',
     features: ['Unlimited assets', '15 team members', 'Advanced depreciation & reports', 'AI-powered insights', 'Assignment history', 'Priority support', 'Custom categories'],
     cta: 'Start free trial',
     popular: true,
@@ -40,8 +48,10 @@ const plans = [
     description: 'For organizations at scale',
     priceMonthly: 79,
     priceYearly: 790,
+    priceIdMonthly: 'enterprise_monthly',
+    priceIdYearly: 'enterprise_yearly',
     features: ['Unlimited everything', 'Unlimited team members', 'Custom integrations', 'Role-based access control', 'Audit logs & compliance', 'Dedicated account manager', 'SSO & SAML', 'API access'],
-    cta: 'Contact sales',
+    cta: 'Subscribe',
     popular: false,
   },
 ];
@@ -57,9 +67,30 @@ const faqs = [
 
 function PricingPage() {
   const [annual, setAnnual] = useState(true);
+  const { openCheckout, closeCheckout, isOpen, CheckoutForm } = useStripeCheckout();
+  const { user } = useAuth();
+
+  function handlePlanSelect(plan: typeof plans[0]) {
+    if (!plan.priceIdMonthly) {
+      // Free plan — go to signup
+      window.location.hash = 'login';
+      return;
+    }
+
+    const priceId = annual ? plan.priceIdYearly! : plan.priceIdMonthly!;
+    openCheckout({
+      priceId,
+      quantity: 1,
+      customerEmail: user?.email || undefined,
+      userId: user?.id || '',
+      returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
+    });
+  }
 
   return (
     <PublicLayout>
+      <PaymentTestModeBanner />
+
       {/* Hero */}
       <section className="py-16 sm:py-24 bg-landing-bg" style={{
         backgroundImage: `radial-gradient(circle, var(--landing-grid) 1.2px, transparent 1.2px)`,
@@ -118,17 +149,16 @@ function PricingPage() {
                     <p className="text-[12px] text-landing-light-muted mt-1">Billed ${plan.priceYearly}/year</p>
                   )}
                 </div>
-                <Link to="/" hash="login">
-                  <Button
-                    className={`w-full rounded-full ${
-                      plan.popular
-                        ? 'bg-landing-dark text-landing-light hover:bg-landing-dark-subtle'
-                        : 'bg-landing-bg text-landing-dark hover:bg-landing-grid border border-landing-grid'
-                    }`}
-                  >
-                    {plan.cta} <ArrowRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => handlePlanSelect(plan)}
+                  className={`w-full rounded-full ${
+                    plan.popular
+                      ? 'bg-landing-dark text-landing-light hover:bg-landing-dark-subtle'
+                      : 'bg-landing-bg text-landing-dark hover:bg-landing-grid border border-landing-grid'
+                  }`}
+                >
+                  {plan.cta} <ArrowRight className="h-4 w-4 ml-1" />
+                </Button>
                 <ul className="mt-6 space-y-3">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-[14px] text-landing-dark">
@@ -142,6 +172,21 @@ function PricingPage() {
           </div>
         </div>
       </section>
+
+      {/* Checkout Dialog */}
+      <Dialog open={isOpen} onOpenChange={(open) => !open && closeCheckout()}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+          <div className="flex items-center justify-between px-6 pt-6 pb-2">
+            <h2 className="text-lg font-semibold">Complete your subscription</h2>
+            <button onClick={closeCheckout} className="text-muted-foreground hover:text-foreground">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="px-6 pb-6">
+            {CheckoutForm && <CheckoutForm />}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* FAQ */}
       <section className="py-20 sm:py-28 bg-white">
